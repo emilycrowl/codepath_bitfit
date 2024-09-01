@@ -21,13 +21,10 @@ class EntryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_entry)
 
-        // Get the views
         etFood = findViewById(R.id.etFoodEntry)
         etCalories = findViewById(R.id.etCaloriesEntry)
         btnSubmit = findViewById(R.id.btnSubmit)
 
-        // When "Submit" button is clicked, launch the list activity
-        // and pass the new Food as an Extra
         btnSubmit.setOnClickListener {
             Log.d(TAG, "submit clicked")
             val intent = Intent(this, MainActivity::class.java)

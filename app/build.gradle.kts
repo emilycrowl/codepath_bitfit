@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-//    alias(libs.plugins.kapt) // Apply the kapt plugin
     id("kotlin-kapt")
 }
 
@@ -68,6 +67,8 @@ dependencies {
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
     implementation(libs.room.runtime)
+    implementation(libs.material)
+    // implementation(libs.androidx.ui.desktop)
     kapt(libs.room.compiler)  // For Kotlin projects
     implementation(libs.room.ktx)  // For Kotlin Coroutines support
     testImplementation(libs.junit)

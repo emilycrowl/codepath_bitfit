@@ -28,9 +28,9 @@ class BitFitAdapter(private val context: Context, private val calories: List<Dis
         private val tvFood = itemView.findViewById<TextView>(R.id.tvFood)
         private val tvCalories = itemView.findViewById<TextView>(R.id.tvCalories)
 
-        fun bind(food: DisplayCalories) {
-            tvFood.text = food.name
-            tvCalories.text = food.calories.toString()
+        fun bind(calories: DisplayCalories) {
+            tvFood.text = calories.name
+            tvCalories.text = calories.calories.toString()
         }
     }
 }

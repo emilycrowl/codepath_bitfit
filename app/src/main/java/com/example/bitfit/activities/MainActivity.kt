@@ -4,25 +4,22 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.bitfit.BitFitAdapter
 import com.example.bitfit.BitFitApplication
 import com.example.bitfit.R
 import com.example.bitfit.databinding.ActivityMainBinding
+import com.example.bitfit.fragments.DashboardFragment
+import com.example.bitfit.fragments.LogFragment
 import com.example.bitfit.models.CaloriesEntity
 import com.example.bitfit.models.DisplayCalories
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private val articles = mutableListOf<DisplayCalories>()
-    private lateinit var rvCalorieList: RecyclerView
-    private lateinit var tvTotalCalories: TextView
     private lateinit var btnAdd: Button
     private lateinit var binding: ActivityMainBinding
    private val TAG = "MainActivity"
@@ -35,42 +32,37 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        rvCalorieList = findViewById(R.id.rvCalorieList)
-        tvTotalCalories = findViewById(R.id.tvTotalCalories)
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
 
-        val bitfitAdapter = BitFitAdapter(this, articles)
-        rvCalorieList.adapter = bitfitAdapter
-        rvCalorieList.layoutManager = LinearLayoutManager(this).also {
-            val dividerItemDecoration = DividerItemDecoration(this, it.orientation)
-            rvCalorieList.addItemDecoration(dividerItemDecoration)
-        }
-
-        // update the RecyclerView when db is updated
-        lifecycleScope.launch {
-            (application as BitFitApplication).db.caloriesDao().getAll().collect { databaseList: List<CaloriesEntity> ->
-                val totalCalories = databaseList.sumOf { it.calories ?: 0L } // Calculate total calories
-                tvTotalCalories.text = "Total Calories: $totalCalories" // Update the TextView
-
-                databaseList.map { entity ->
-                    DisplayCalories(
-                        entity.name,
-                        entity.calories ?: 0L,
-                        entity.totalCalories ?: 0L
-                    )
-                }.also { mappedList ->
-                    articles.clear()
-                    articles.addAll(mappedList)
-                    bitfitAdapter.notifyDataSetChanged()
-                }
+        // handle navigation selection
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            lateinit var fragment: Fragment
+            when (item.itemId) {
+                R.id.tabLog -> fragment = LogFragment()
+                R.id.tabDashboard -> fragment = DashboardFragment()
             }
+            replaceFragment(fragment)
+            handleNewEntry()
+            true
         }
 
-        // check if MainActivity has an extra
+        // Set default selection
+        bottomNavigationView.selectedItemId = R.id.tabDashboard
+    }
+
+    private fun replaceFragment(newFragment: Fragment) {
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.article_frame_layout, newFragment)
+        fragmentTransaction.commit()
+    }
+
+    private fun handleNewEntry() {
         val calories = intent.getSerializableExtra("ENTRY_EXTRA")
         if (calories != null) {
             Log.d(TAG, "got an extra")
             Log.d(TAG, (calories as DisplayCalories).toString())
-            // Since there's an extra, let's add it to the DB.
+
             lifecycleScope.launch(IO) {
                 (application as BitFitApplication).db.caloriesDao().insert(
                     CaloriesEntity(

@@ -7,4 +7,11 @@
     <string name="enter_calories">Enter Calories</string>
     <string name="record_calories">Record Calories</string>
     <string name="new_entry">New Entry</string>
+    <string name="clear_data">Clear Data</string>
+    <string name="average_calories">Average Calories:</string>
+    <string name="minimum_calories">Minimum Calories:</string>
+    <string name="maximum_calories">Maximum Calories:</string>
+    <string name="log">Log</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="total_calories">Total Calories:</string>
 </resources>
