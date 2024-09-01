@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        handleNewEntry()
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
 
@@ -42,11 +43,10 @@ class MainActivity : AppCompatActivity() {
                 R.id.tabDashboard -> fragment = DashboardFragment()
             }
             replaceFragment(fragment)
-            handleNewEntry()
             true
         }
 
-        // Set default selection
+        // set default selection
         bottomNavigationView.selectedItemId = R.id.tabDashboard
     }
 
@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity() {
                     )
                 )
             }
+            intent.removeExtra("ENTRY_EXTRA")
         }
         else {
             Log.d(TAG, "no extra")
